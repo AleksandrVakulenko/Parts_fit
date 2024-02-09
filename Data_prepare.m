@@ -1,23 +1,32 @@
+%% import from *.txt
+
+% TODO
 
 
+%% load from file
 load("data.mat")
 clearvars s
 
 %% background correction
 
-p = 0.9;
-tail_range = round(numel(q)*p):numel(q);
+p = 0.4; % find BG in last p % of data points
+tail_range = round(numel(q)*(1-p)):numel(q);
 Background = mean(int(tail_range));
 int_nobg = int - Background;
 int_nobg(int_nobg<0) = 0;
+
+disp(['Background value = ' num2str(Background)])
 
 figure
 hold on
 plot(q, int)
 plot(q, int_nobg)
-% set(gca,'xscale', 'log')
+set(gca,'xscale', 'log')
 set(gca,'yscale', 'log')
-
+title('Full data')
+legend({'with BG', 'without BG'})
+xlabel('q')
+ylabel('int')
 
 %%  cut of noisy data
 clc
@@ -72,24 +81,22 @@ q_cor = q(Output_range);
 intcor = int_nobg(Output_range);
 intcor_log = log10(intcor);
 
-%%
-
-
-% figure
+figure
 hold on
 plot(q_cor, intcor_log)
-% set(gca,'xscale', 'log')
-% set(gca,'yscale', 'log')
+title('Data with no noise')
+xlabel('q')
+ylabel('int')
 
 
-%%
+%% prepare to processing
+
 X_input = q_cor;
 Y_input = intcor_log;
 
 clearvars -except X_input Y_input 
 
 
-%%
 
 
 

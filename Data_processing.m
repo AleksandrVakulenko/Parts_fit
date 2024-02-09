@@ -1,3 +1,4 @@
+%% Fit parts
 clc
 
 Number_of_parts = 20; % !!!
@@ -36,7 +37,9 @@ for i = 1:Number_of_parts
 
     Fit_obj = fit(X_part, Y_part, 'log10(A/x^p)', 'lower', [0 0], 'start', [1 1]);
     Amp_init = Fit_obj.A;
-    Alpha_init = Fit_obj.p
+    Alpha_init = Fit_obj.p;
+
+    disp(['A = ' num2str(Amp_init, '%.2e') '  α = ' num2str(Alpha_init, '%5.2f')])
 
     Parts_amp_init{i} = repmat(Amp_init, [1, numel(X_part)]);
     Parts_alpha_init{i} = repmat(Alpha_init, [1, numel(X_part)]);
@@ -45,16 +48,16 @@ for i = 1:Number_of_parts
     Parts_y{i} = Y_part;
 
     Y_fit = feval(Fit_obj, X_part);
-    plot(X_part, Y_fit, 'LineWidth', 2)
-
+    plot(X_part, Y_fit, 'r', 'LineWidth', 2)
+    xlabel('q')
+    ylabel('int')
 end
 
 clearvars X_part Y_part
 
-%%
+%% Plot coefficients
 
 figure
-
 
 for i = 1:Number_of_parts
     X_part = Parts_x{i};
@@ -66,13 +69,15 @@ for i = 1:Number_of_parts
     hold on
     plot(X_part, Amp_part, 'LineWidth', 2)
     set(gca, 'yscale', 'log')
-    title('Amp')
+    xlabel('q')
+    ylabel('A')
 
     subplot(2, 1, 2)
     hold on
     plot(X_part, Alpha_part, 'LineWidth', 2)
     set(gca, 'yscale', 'linear')
-    title('Alpha')
+    xlabel('q')
+    ylabel('α')
 end
 
 
