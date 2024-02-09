@@ -57,30 +57,43 @@ clearvars X_part Y_part
 
 %% Plot coefficients
 
-figure
 
+Amp_values = [];
+Alpha_values = [];
 for i = 1:Number_of_parts
     X_part = Parts_x{i};
     Y_part = Parts_y{i};
-    Amp_part = Parts_amp_init{i};
-    Alpha_part = Parts_alpha_init{i};
-
-    subplot(2, 1, 1)
-    hold on
-    plot(X_part, Amp_part, 'LineWidth', 2)
-    set(gca, 'yscale', 'log')
-    xlabel('q')
-    ylabel('A')
-
-    subplot(2, 1, 2)
-    hold on
-    plot(X_part, Alpha_part, 'LineWidth', 2)
-    set(gca, 'yscale', 'linear')
-    xlabel('q')
-    ylabel('α')
+    Amp_values = [Amp_values Parts_amp_init{i}];
+    Alpha_values = [Alpha_values Parts_alpha_init{i}];
 end
 
 
+figure
+
+subplot(2, 1, 1)
+hold on
+plot(X_input, Amp_values, 'LineWidth', 2)
+set(gca, 'yscale', 'log')
+xlabel('q')
+ylabel('A')
+
+subplot(2, 1, 2)
+hold on
+plot(X_input, Alpha_values, 'LineWidth', 2)
+set(gca, 'yscale', 'linear')
+xlabel('q')
+ylabel('α')
+
+
+%% Save to file
+
+Output_file_name = 'test_out.txt';
+
+Output_data(1:Data_size, 1) = X_input;
+Output_data(1:Data_size, 2) = Amp_values;
+Output_data(1:Data_size, 3) = Alpha_values;
+
+writematrix(single(Output_data), Output_file_name, 'Delimiter', ' ');
 
 
 
